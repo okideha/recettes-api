@@ -2,17 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
-use App\Entity\Traits\HasIdTrait;
 use App\Entity\Traits\HasDescriptionTrait;
+use App\Entity\Traits\HasIdTrait;
 use App\Entity\Traits\HasPriorityTrait;
+use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity as TimestampableTrait;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Gedmo\Timestampable\Traits\TimestampableEntity as TimestampableTrait;
-use DateTime;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[Vich\Uploadable]
@@ -98,9 +96,14 @@ class Image
         $this->file = $file;
 
         if (null !== $file) {
-            $this->setUpdatedAt(new DateTime());
+            $this->setUpdatedAt(new \DateTime());
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getPath();
     }
 }

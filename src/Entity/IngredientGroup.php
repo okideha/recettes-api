@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\HasIdTrait;
+use App\Entity\Traits\HasNameTrait;
+use App\Entity\Traits\HasPriorityTrait;
 use App\Repository\IngredientGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\HasIdTrait;
-use App\Entity\Traits\HasNameTrait;
-use App\Entity\Traits\HasPriorityTrait;
 
 #[ORM\Entity(repositoryClass: IngredientGroupRepository::class)]
 class IngredientGroup
@@ -53,5 +53,10 @@ class IngredientGroup
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName().' ('.$this->getId().')';
     }
 }

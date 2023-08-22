@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\HasIdTrait;
 use App\Repository\StepRepository;
+use App\Entity\Traits\HasPriorityTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\HasIdTrait;
 use Gedmo\Timestampable\Traits\TimestampableEntity as TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: StepRepository::class)]
@@ -15,12 +16,10 @@ class Step
 {
     use HasIdTrait;
     use TimestampableTrait;
+    use HasPriorityTrait;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
-
-    #[ORM\Column(type: Types::SMALLINT)]
-    private ?int $priority = null;
 
     #[ORM\ManyToOne(inversedBy: 'steps')]
     #[ORM\JoinColumn(nullable: false)]
@@ -42,18 +41,6 @@ class Step
     public function setContent(string $content): static
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getPriority(): ?int
-    {
-        return $this->priority;
-    }
-
-    public function setPriority(int $priority): static
-    {
-        $this->priority = $priority;
 
         return $this;
     }
@@ -98,5 +85,10 @@ class Step
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getRecipe().' n°'.$this->getPriority();
     }
 }

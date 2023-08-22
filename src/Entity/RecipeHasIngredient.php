@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\HasIdTrait;
 use App\Repository\RecipeHasIngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\HasIdTrait;
 
 #[ORM\Entity(repositoryClass: RecipeHasIngredientRepository::class)]
 class RecipeHasIngredient
@@ -102,5 +102,10 @@ class RecipeHasIngredient
         $this->unit = $unit;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getRecipe().' - '.$this->getIngredient();
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\RecipeRepository;
+use App\Entity\Traits\HasDescriptionTrait;
 use App\Entity\Traits\HasIdTrait;
 use App\Entity\Traits\HasNameTrait;
-use App\Entity\Traits\HasDescriptionTrait;
+use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -41,6 +41,9 @@ class Recipe
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeHasIngredient::class)]
     private Collection $recipeHasIngredients;
 
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeHasSource::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $recipeHasSources;
+
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'recipes')]
     private Collection $tags;
 
@@ -49,6 +52,7 @@ class Recipe
         $this->steps = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->recipeHasIngredients = new ArrayCollection();
+        $this->recipeHasSources = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
@@ -191,6 +195,36 @@ class Recipe
     }
 
     /**
+     * @return Collection<int, RecipeHasSource>
+     */
+    public function getRecipeHasSources(): Collection
+    {
+        return $this->recipeHasSources;
+    }
+
+    public function addRecipeHasSource(RecipeHasSource $recipeHasSource): self
+    {
+        if (!$this->recipeHasSources->contains($recipeHasSource)) {
+            $this->recipeHasSources[] = $recipeHasSource;
+            $recipeHasSource->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeHasSource(RecipeHasSource $recipeHasSource): self
+    {
+        if ($this->recipeHasSources->removeElement($recipeHasSource)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeHasSource->getRecipe() === $this) {
+                $recipeHasSource->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Tag>
      */
     public function getTags(): Collection
@@ -215,5 +249,10 @@ class Recipe
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName().' ('.$this->getId().')';
     }
 }
