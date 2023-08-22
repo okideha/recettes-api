@@ -7,12 +7,26 @@ use App\Entity\Traits\HasIdTrait;
 use App\Entity\Traits\HasPriorityTrait;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity as TimestampableTrait;
+use App\Entity\Traits\HasTimestampTrait as TimestampableTrait;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Delete(security: "is_granted('ROLE_ADMIN') or object.isUserAllowedToEdit(user)"),
+        new GetCollection(),
+        new Post(security: "is_granted('ROLE_ADMIN') or object.isUserAllowedToEdit(user)"),
+    ],
+)]
 #[Vich\Uploadable]
 class Image
 {
@@ -22,9 +36,11 @@ class Image
     use TimestampableTrait;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['get'])]
     private ?string $path = null;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?int $size = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]

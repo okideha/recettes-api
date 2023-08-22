@@ -10,9 +10,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity as TimestampableTrait;
+use App\Entity\Traits\HasTimestampTrait as TimestampableTrait;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
+#[ApiResource(
+    operations: [
+    new Get(normalizationContext: [
+        'groups' => ['get', 'Recipe:item:get'],
+    ]),
+    new Patch(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+    new Delete(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+    new GetCollection(),
+    new Post(security: "is_granted('ROLE_USER')"),
+    ],
+)]
 class Recipe
 {
     use HasIdTrait;
@@ -21,30 +39,39 @@ class Recipe
     use TimestampableTrait;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?bool $draft = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['get'])]
     private ?int $cooking = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['get'])]
     private ?int $break = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['get'])]
     private ?int $preparation = null;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Step::class, orphanRemoval: true)]
+    #[Groups(['get'])]
     private Collection $steps;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Image::class, orphanRemoval: true)]
+    #[Groups(['get'])]
     private Collection $images;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeHasIngredient::class)]
+    #[Groups(['get'])]
     private Collection $recipeHasIngredients;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeHasSource::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['get'])]
     private Collection $recipeHasSources;
 
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'recipes')]
+    #[Groups(['get'])]
     private Collection $tags;
 
     public function __construct()
