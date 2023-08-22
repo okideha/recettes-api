@@ -2,16 +2,32 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\HasDescriptionTrait;
+use App\Entity\Traits\HasIdTrait;
+use App\Entity\Traits\HasNameTrait;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\HasIdTrait;
-use App\Entity\Traits\HasNameTrait;
-use App\Entity\Traits\HasDescriptionTrait;
-use Gedmo\Timestampable\Traits\TimestampableEntity as TimestampableTrait;
+use App\Entity\Traits\HasTimestampTrait as TimestampableTrait;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Patch(),
+        new Delete(),
+        new GetCollection(),
+        new Post(),
+    ],
+)]
 class Ingredient
 {
     use HasIdTrait;
@@ -20,15 +36,19 @@ class Ingredient
     use TimestampableTrait;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?bool $vegan = false;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?bool $vegetarian = true;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?bool $dairyFree = false;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?bool $glutenFree = false;
 
     #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: RecipeHasIngredient::class)]
@@ -115,5 +135,10 @@ class Ingredient
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName().' ('.$this->getId().')';
     }
 }

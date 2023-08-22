@@ -2,13 +2,32 @@
 
 namespace App\Entity;
 
-use App\Repository\TagRepository;
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Traits\HasDescriptionTrait;
 use App\Entity\Traits\HasIdTrait;
 use App\Entity\Traits\HasNameTrait;
-use App\Entity\Traits\HasDescriptionTrait;
+use App\Repository\TagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new Patch(security: "is_granted('ROLE_USER')"),
+        new Delete(security: "is_granted('ROLE_USER')"),
+        new GetCollection(),
+        new Post(security: "is_granted('ROLE_USER')"),
+    ],
+)]
+
 class Tag
 {
     use HasIdTrait;
@@ -16,16 +35,19 @@ class Tag
     use HasDescriptionTrait;
 
     #[ORM\Column]
+    #[Groups(['get'])]
     private ?bool $menu = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['get'])]
     private ?self $parent = null;
 
     /**
      * @var Collection<int, Tag>
      */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[Groups(['get'])]
     private Collection $children;
 
     /**
