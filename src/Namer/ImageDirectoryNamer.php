@@ -13,6 +13,8 @@ class ImageDirectoryNamer implements DirectoryNamerInterface
 {
     /**
      * @param Image $object
+     *
+     * @throws \Exception
      */
     public function directoryName($object, PropertyMapping $mapping): string
     {
