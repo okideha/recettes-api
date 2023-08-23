@@ -2,21 +2,21 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\HasDescriptionTrait;
-use App\Entity\Traits\HasIdTrait;
-use App\Entity\Traits\HasPriorityTrait;
-use App\Repository\ImageRepository;
-use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\HasTimestampTrait as TimestampableTrait;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Entity\Traits\HasDescriptionTrait;
+use App\Entity\Traits\HasIdTrait;
+use App\Entity\Traits\HasPriorityTrait;
+use App\Entity\Traits\HasTimestampTrait as TimestampableTrait;
+use App\Repository\ImageRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ApiResource(
@@ -51,6 +51,7 @@ class Image
     #[ORM\JoinColumn(nullable: false)]
     private ?Step $step = null;
 
+    // NOTE: This is not a mapped field of entity metadata, just a simple property.
     #[Vich\UploadableField(mapping: 'images', fileNameProperty: 'path', size: 'size')]
     private ?File $file = null;
 
@@ -59,7 +60,7 @@ class Image
         return $this->path;
     }
 
-    public function setPath(string $path): static
+    public function setPath(string $path): self
     {
         $this->path = $path;
 
@@ -71,7 +72,7 @@ class Image
         return $this->size;
     }
 
-    public function setSize(int $size): static
+    public function setSize(int $size): self
     {
         $this->size = $size;
 
@@ -83,7 +84,7 @@ class Image
         return $this->recipe;
     }
 
-    public function setRecipe(?Recipe $recipe): static
+    public function setRecipe(?Recipe $recipe): self
     {
         $this->recipe = $recipe;
 
@@ -95,7 +96,7 @@ class Image
         return $this->step;
     }
 
-    public function setStep(?Step $step): static
+    public function setStep(?Step $step): self
     {
         $this->step = $step;
 
