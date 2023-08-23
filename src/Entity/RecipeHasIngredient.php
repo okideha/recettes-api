@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\HasIdTrait;
-use App\Repository\RecipeHasIngredientRepository;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Entity\Traits\HasIdTrait;
+use App\Repository\RecipeHasIngredientRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RecipeHasIngredientRepository::class)]

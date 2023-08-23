@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\HasIdTrait;
-use App\Entity\Traits\HasNameTrait;
-use App\Entity\Traits\HasPriorityTrait;
-use App\Repository\IngredientGroupRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Entity\Traits\HasIdTrait;
+use App\Entity\Traits\HasNameTrait;
+use App\Entity\Traits\HasPriorityTrait;
+use App\Repository\IngredientGroupRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: IngredientGroupRepository::class)]
@@ -32,6 +32,9 @@ class IngredientGroup
     use HasNameTrait;
     use HasPriorityTrait;
 
+    /**
+     * @var Collection<int, RecipeHasIngredient>
+     */
     #[ORM\OneToMany(mappedBy: 'ingredientGroup', targetEntity: RecipeHasIngredient::class)]
     private Collection $recipeHasIngredients;
 
