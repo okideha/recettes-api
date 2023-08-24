@@ -26,7 +26,7 @@ class ImageCrudController extends AbstractCrudController
             VichImageField::new('file'),
             IntegerField::new('priority'),
             AssociationField::new('recipe'),
-            AssociationField::new('step')
+            AssociationField::new('step'),
         ];
     }
 }

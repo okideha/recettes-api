@@ -70,10 +70,10 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Sous-données');
 
-        yield MenuItem::linkToCrud('Etapes', 'fa fa-forward-step', Step::class);
-        yield MenuItem::linkToCrud('Images', 'fa fa-image', Image::class);
+        // yield MenuItem::linkToCrud('Etapes', 'fa fa-forward-step', Step::class);
+        // yield MenuItem::linkToCrud('Images', 'fa fa-image', Image::class);
         yield MenuItem::linkToCrud('Groupes d\'ingrédients', 'fa fa-cubes-stacked', IngredientGroup::class);
-        yield MenuItem::linkToCrud('Ingéridents de recettes', 'fa fa-cubes-stacked', Ingredient::class);
-        yield MenuItem::linkToCrud('Sources de recettes', 'fa fa-arrow-right-from-bracket', Source::class);
+        // yield MenuItem::linkToCrud('Ingéridents de recettes', 'fa fa-cubes-stacked', Ingredient::class);
+        // yield MenuItem::linkToCrud('Sources de recettes', 'fa fa-arrow-right-from-bracket', Source::class);
     }
 }
