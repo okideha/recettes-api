@@ -2,6 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Ingredient;
+use App\Entity\IngredientGroup;
+use App\Entity\Recipe;
+use App\Entity\Source;
+use App\Entity\Tag;
+use App\Entity\Unit;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -11,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
-    #[Route(path:'/admin', name: 'admin_dashboard_index')]
+    #[Route(path: '/admin', name: 'admin_dashboard_index')]
     public function index(): Response
     {
         // return parent::index();
@@ -43,12 +49,25 @@ class DashboardController extends AbstractDashboardController
     public function configureCrud(): Crud
     {
         return parent::configureCrud()
-            ->renderContentMaximized();
+            ->renderContentMaximized()
+            ->showEntityActionsInlined();
     }
 
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+
+        yield MenuItem::linkToCrud('Recettes', 'fa fa-list-check', Recipe::class);
+
+        yield MenuItem::section('Données');
+
+        yield MenuItem::linkToCrud('Sources', 'fa fa-share-from-square', Source::class);
+        yield MenuItem::linkToCrud('Unités', 'fa fa-dice-one', Unit::class);
+        yield MenuItem::linkToCrud('Ingrédients', 'fa fa-carrot', Ingredient::class);
+        yield MenuItem::linkToCrud('Tags', 'fa fa-tags', Tag::class);
+
+        yield MenuItem::section('Sous-données');
+
+        yield MenuItem::linkToCrud('Groupes d\'ingrédients', 'fa fa-cubes-stacked', IngredientGroup::class);
     }
 }
