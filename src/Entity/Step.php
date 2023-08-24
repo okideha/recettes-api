@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Patch(security: "is_granted('ROLE_ADMIN') or object.getRecipe().getUser() == user"),
         new Delete(security: "is_granted('ROLE_ADMIN') or object.getRecipe().getUser() == user"),
         new GetCollection(),
-        new Post(security: "is_granted('ROLE_ADMIN') or object.getRecipe().getUser() == user"),
+        new Post(),
     ],
 )]
 class Step

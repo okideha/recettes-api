@@ -44,11 +44,9 @@ class Image
     private ?int $size = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Recipe $recipe = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?Step $step = null;
 
     // NOTE: This is not a mapped field of entity metadata, just a simple property.
